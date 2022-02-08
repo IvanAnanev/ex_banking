@@ -36,4 +36,13 @@ defmodule ExBanking.UserLogic do
         {{:ok, Money.to_float(new_money)}, new_wallet}
     end
   end
+
+  @doc """
+  Get balance
+  """
+  @spec get_balance(wallet(), %{currency: ExBanking.currency()}) :: {{:ok, float()}, wallet()}
+  def get_balance(wallet, %{currency: currency}) do
+    money_in_wallet = Map.get(wallet, currency, Money.new(0))
+    {{:ok, Money.to_float(money_in_wallet)}, wallet}
+  end
 end

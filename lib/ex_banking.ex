@@ -60,6 +60,7 @@ defmodule ExBanking do
   Withdraw
 
   ## Examples
+
     iex> ExBanking.create_user("User With Money")
     iex> ExBanking.deposit("User With Money", 200, "RUB")
     iex> ExBanking.withdraw("User With Money", 100.01, "RUB")
@@ -96,4 +97,37 @@ defmodule ExBanking do
   end
 
   def withdraw(_user, _amount, _currency), do: {:error, :wrong_arguments}
+
+  @doc ~S"""
+  Get balance
+
+  ## Examples
+
+    iex> ExBanking.create_user("Ivanoff")
+    iex> ExBanking.deposit("Ivanoff", 99.99, "RUB")
+    iex> ExBanking.get_balance("Ivanoff", "RUB")
+    {:ok, 99.99}
+
+    iex> ExBanking.create_user("Petroff")
+    iex> ExBanking.get_balance("Petroff", "RUB")
+    {:ok, 0.0}
+
+    iex> ExBanking.get_balance("Sidoroff", "USD")
+    {:error, :user_does_not_exist}
+
+    iex> ExBanking.get_balance(1, 1)
+    {:error, :wrong_arguments}
+
+  """
+  @spec get_balance(
+          user(),
+          currency()
+        ) ::
+          {:ok, balance :: number()}
+          | {:error, :wrong_arguments | :user_does_not_exist | :too_many_requests_to_user}
+  def get_balance(user, currency) when is_binary(user) and is_binary(currency) do
+    UserProcess.call(user, {&UserLogic.get_balance/2, %{currency: currency}})
+  end
+
+  def get_balance(_user, _currency), do: {:error, :wrong_arguments}
 end

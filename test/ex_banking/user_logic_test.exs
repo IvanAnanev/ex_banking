@@ -22,4 +22,11 @@ defmodule ExBanking.UserLogicTest do
     assert {{:error, :not_enough_money}, %{"USD" => Money.new(10_000)}} ==
              UserLogic.withdraw(wallet, %{amount: 5000.01, currency: "RUB"})
   end
+
+  test "get_balance/2" do
+    wallet = %{"USD" => Money.new(1_000)}
+
+    assert {{:ok, 1000.0}, wallet} == UserLogic.get_balance(wallet, %{currency: "USD"})
+    assert {{:ok, 0.0}, wallet} == UserLogic.get_balance(wallet, %{currency: "RUB"})
+  end
 end
