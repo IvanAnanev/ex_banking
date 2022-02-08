@@ -1,4 +1,4 @@
-defmodule ExBanking.UserProcessTest do
+defmodule ExBanking.UserSupervisorTest do
   use ExUnit.Case, async: true
   alias ExBanking.UserSupervisor
 

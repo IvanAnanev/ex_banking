@@ -1,5 +1,7 @@
 defmodule ExBanking.UserProcess do
-  @moduledoc false
+  @doc """
+  User Process
+  """
   use GenServer, restart: :transient
 
   alias ExBanking.UserRegistry
