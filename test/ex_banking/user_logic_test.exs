@@ -12,4 +12,14 @@ defmodule ExBanking.UserLogicTest do
     {balance, new_wallet} = UserLogic.deposit(new_wallet, %{amount: 7, currency: "RUB"})
     assert {{:ok, 7.0}, %{"RUB" => money_rub, "USD" => money_usd}} == {balance, new_wallet}
   end
+
+  test "withdraw/2" do
+    wallet = %{"USD" => Money.new(10_000)}
+
+    assert {{:ok, 4999.99}, %{"USD" => Money.new(4999.99)}} ==
+             UserLogic.withdraw(wallet, %{amount: 5000.01, currency: "USD"})
+
+    assert {{:error, :not_enough_money}, %{"USD" => Money.new(10_000)}} ==
+             UserLogic.withdraw(wallet, %{amount: 5000.01, currency: "RUB"})
+  end
 end
